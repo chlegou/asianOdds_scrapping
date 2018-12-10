@@ -5,11 +5,11 @@ include 'libs/phpQuery.php';
 
 // path to save in
 $path = 'data/';
-$fileName = 'data_'.date('Ymd_his').'.txt';
+$fileName = 'data_'.date('Ymd_His').'.txt';
 
 
 # Website URL
-$url = "http://www.asianodds.com/Italy__Serie_A.html";
+$url = "http://www.asianodds.com/next_200_games.asp";// "http://www.asianodds.com/Italy__Serie_A.html";
 $ch = curl_init();
 $timeout = 7;
 curl_setopt($ch, CURLOPT_URL, $url);
@@ -29,6 +29,7 @@ function fcl_utilities_is_html($string) {
 
 // Create phpQuery document with returned HTML
 $doc = phpQuery::newDocument($html);
+//$doc = phpQuery::newDocument(file_get_contents("static_gistfile1.html"));
 
 $table = pq('table')->get(4);
 
@@ -83,14 +84,16 @@ foreach ($table->getElementsByTagName('tr') as $item) {
 
 //print_r($records);
 
-$dateRegex = "/[^\d{2}\/\d{2}\/\d{4}]/";
+$dateRegex = "/(\d{2}\/\d{2}\/\d{4})$/";
 $scrappedRecords = [];
 $recordsCounter = 0;
 
 foreach ($records as $day){
     //print_r($day);
-    $date = pq($day['date'])->find('strong')->html();
-    $date = preg_replace($dateRegex, '', $date);
+    // echo pq($day['date']);
+    $date = trim(pq($day['date'])->find('strong')->html());
+    preg_match($dateRegex, $date, $output_array);
+    $date = $output_array[0];
 
     foreach ($day['events'] as $dayEvent){
         $record = sprintf('%03d', ++$recordsCounter)."|$date";
