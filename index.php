@@ -10,14 +10,22 @@ $fileName = 'data_'.date('Ymd_His').'.txt';
 
 # Website URL
 $url = "http://www.asianodds.com/next_200_games.asp";// "http://www.asianodds.com/Italy__Serie_A.html";
-$ch = curl_init();
+/*$ch = curl_init();
 $timeout = 7;
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 $html = curl_exec($ch);
-curl_close($ch);
+curl_close($ch);*/
 
+
+// return the html content from URL,could be used for local and remote files
+function getURLContent($url){
+    $doc = new DOMDocument;
+    $doc->preserveWhiteSpace = FALSE;
+    @$doc->loadHTMLFile($url);
+    return $doc->saveHTML();
+}
 
 
 function fcl_utilities_is_html($string) {
@@ -25,11 +33,11 @@ function fcl_utilities_is_html($string) {
     return preg_match('/<\s?[^\>]*\/?\s?>/i', $string);
 }
 
-
+$html = getURLContent($url);
 
 // Create phpQuery document with returned HTML
 $doc = phpQuery::newDocument($html);
-//$doc = phpQuery::newDocument(file_get_contents("static_gistfile1.html"));
+// $doc = phpQuery::newDocument(file_get_contents("static_gistfile3.html"));
 
 $table = pq('table')->get(4);
 
