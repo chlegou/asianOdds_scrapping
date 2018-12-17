@@ -6,6 +6,7 @@ include 'libs/phpQuery.php';
 // path to save in
 $path = 'data/';
 $fileName = 'data_'.date('Ymd_His').'.txt';
+$fileSourceName = 'data_'.date('Ymd_His').'_source'.'.html';
 
 
 # Website URL
@@ -34,6 +35,9 @@ function fcl_utilities_is_html($string) {
 }
 
 $html = getURLContent($url);
+
+// before starting, we first save the html source in a file
+file_put_contents($path . $fileSourceName, $html, FILE_APPEND | LOCK_EX);
 
 // Create phpQuery document with returned HTML
 $doc = phpQuery::newDocument($html);
