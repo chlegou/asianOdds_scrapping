@@ -10,7 +10,7 @@ $fileSourceName = 'data_'.date('Ymd_His').'_source'.'.html';
 
 
 # Website URL
-$url = "http://www.asianodds.com/next_200_games.asp";// "http://www.asianodds.com/Italy__Serie_A.html";
+$url = "http://www.asianodds.com/past_asian_odds.asp"; //"http://www.asianodds.com/next_200_games.asp";// "http://www.asianodds.com/Italy__Serie_A.html";
 /*$ch = curl_init();
 $timeout = 7;
 curl_setopt($ch, CURLOPT_URL, $url);
@@ -104,8 +104,15 @@ foreach ($records as $day){
     //print_r($day);
     // echo pq($day['date']);
     $date = trim(pq($day['date'])->find('strong')->html());
+
+    // skip  "Various : Fantasy matches" sections
+    if (preg_match('/(Various|Fantasy)/i', $date)) {
+        continue;
+    }
+
     preg_match($dateRegex, $date, $output_array);
     $date = $output_array[0];
+
 
     foreach ($day['events'] as $dayEvent){
         $record = sprintf('%03d', ++$recordsCounter)."|$date";
